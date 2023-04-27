@@ -16,11 +16,13 @@ Y la lambda a su vez debe integrarse con una tabla de DynamoDb en la cual se ges
 La lambda o lambdas deben tener pruebas unitarias.
 Se propone la siguiente estructura JSON para los productos:
 
+```javascript
 {
 "productId": 1,
 "productName": "Silla"
 }
 
+```
 Se deben manejar bien los códigos HTTP y se debe crear un objeto json que represente el estado de cada
 ejecución.
 El lenguaje para la lambda pueden ser los siguientes:
@@ -39,6 +41,8 @@ por medio de un Map.
 Se propone la siguiente estructura JSON como input de la step function:
 
 Crear Producto
+
+```javascript
 {
  "operation":"createProduct",
  "products":[
@@ -56,6 +60,7 @@ Crear Producto
  }
  ]
 }
+```
 
 ## Documentación
 
