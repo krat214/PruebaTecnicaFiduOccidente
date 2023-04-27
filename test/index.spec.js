@@ -1,14 +1,22 @@
+/*@autor: Angel Renteria
+/*@date: 2023-04-26
+/*@description: Pruebas unitarias para la prueba tecnica de FiduOccidente
+/*@version: 1
+*/
+
+
+/********* Importando librerias ********* */
 const { describe } = require("node:test");
 const { handler } = require("../index.js");
 
-/******Mocks******** */
+/******Simulacion Data******** */
 const Items = [
   { productId: "1", productName: "product 1" },
   { productId: "2", productName: "product 2" },
   { productId: "3", productName: "product 3" },
 ];
 
-//mock aws
+/******Mock aws ****************/
 jest.mock("aws-sdk", () => {
   mockDocumentClient = {
     scan: jest.fn().mockReturnThis(),
@@ -30,7 +38,7 @@ jest.mock("aws-sdk", () => {
   };
 });
 
-/**************** */
+/********* Probando los diferentes metodos ******* */
 
 describe("getProducts", () => {
   it("should return all products", async () => {
@@ -42,15 +50,16 @@ describe("getProducts", () => {
     expect(await handler(event)).toEqual({
       statusCode: 501,
       body: JSON.stringify('Unknown Method'),
-      headers: {'Content-Type': 'application/json'}
+      headers: { 'Content-Type': 'application/json' }
     })
   });
 });
 
+/**** Probando getProducts ****/
 
 describe("getProducts", () => {
   it("should return all products", async () => {
-    mockDocumentClient.promise.mockResolvedValue({ Items }) 
+    mockDocumentClient.promise.mockResolvedValue({ Items })
 
     const event = {
       httpMethod: "GET",
@@ -72,7 +81,7 @@ describe("getProducts", () => {
 
 describe("getProduct", () => {
   it("should return a product", async () => {
-    mockDocumentClient.promise.mockResolvedValue({ Item: Items[0] }) 
+    mockDocumentClient.promise.mockResolvedValue({ Item: Items[0] })
 
     const event = {
       httpMethod: "GET",
@@ -99,7 +108,7 @@ describe("getProduct", () => {
 describe("getProduct", () => {
   it("should return a product failed error", async () => {
     const productId = 4;
-    mockDocumentClient.promise.mockResolvedValue({ productId }) 
+    mockDocumentClient.promise.mockResolvedValue({ productId })
 
     const event = {
       httpMethod: "GET",
@@ -124,8 +133,8 @@ describe("getProduct", () => {
 
 describe("getProduct", () => {
   it("should return a product failed error Internal Server", async () => {
-    const productId = { price: 1000};
-    mockDocumentClient.promise.mockResolvedValue() 
+    const productId = { price: 1000 };
+    mockDocumentClient.promise.mockResolvedValue()
     const event = {
       httpMethod: "GET",
       path: "/product",
@@ -147,12 +156,12 @@ describe("getProduct", () => {
   });
 });
 
-
+/********* Probando createProduct  ******* */
 
 describe("createProduct", () => {
   test('should create new product', async () => {
     const newProduct = { productId: "4", productName: "product 4" };
-    mockDocumentClient.promise.mockResolvedValue({ newProduct }) 
+    mockDocumentClient.promise.mockResolvedValue({ newProduct })
 
     const event = {
       httpMethod: "POST",
@@ -178,8 +187,8 @@ describe("createProduct", () => {
 describe("createProduct", () => {
   test('should return error when creating new product', async () => {
     const newProduct = { productId: "1", productName: "product 1" };
-    
-    mockDocumentClient.promise.mockRejectedValue( new Error('Error Saving Product')) 
+
+    mockDocumentClient.promise.mockRejectedValue(new Error('Error Saving Product'))
 
     const event = {
       httpMethod: "POST",
@@ -202,10 +211,12 @@ describe("createProduct", () => {
 });
 
 
+/********* Probando updateProduct  ******* */
+
 describe("updateProduct", () => {
   test('should update a product', async () => {
     const updatedProduct = { productId: "1", productName: "product 1 updated" };
-    mockDocumentClient.promise.mockResolvedValue({ updatedProduct }) 
+    mockDocumentClient.promise.mockResolvedValue({ updatedProduct })
 
     const event = {
       httpMethod: "PUT",
@@ -230,7 +241,7 @@ describe("updateProduct", () => {
 describe("updateProduct", () => {
   test('should return error whenupdate a product', async () => {
     const updatedProduct = { productId: "1", productName: "product 1 updated" };
-    mockDocumentClient.promise.mockRejectedValue( new Error('Error Updating Product')) 
+    mockDocumentClient.promise.mockRejectedValue(new Error('Error Updating Product'))
 
     const event = {
       httpMethod: "PUT",
@@ -253,10 +264,12 @@ describe("updateProduct", () => {
 });
 
 
+/********* Probando deleteProduct  ******* */
+
 describe("deleteProduct", () => {
   test('should delete a product', async () => {
-    const productId = { productId: "1"};
-    mockDocumentClient.promise.mockResolvedValue({productId}) 
+    const productId = { productId: "1" };
+    mockDocumentClient.promise.mockResolvedValue({ productId })
 
     const event = {
       httpMethod: "DELETE",
@@ -281,8 +294,8 @@ describe("deleteProduct", () => {
 
 describe("deleteProduct", () => {
   test('should return error delete a product', async () => {
-    const productId = { productId: "1"};
-    mockDocumentClient.promise.mockRejectedValue( new Error('Error Deleting Product')) 
+    const productId = { productId: "1" };
+    mockDocumentClient.promise.mockRejectedValue(new Error('Error Deleting Product'))
 
     const event = {
       httpMethod: "DELETE",
@@ -305,11 +318,12 @@ describe("deleteProduct", () => {
 });
 
 
+/********* Probando modifyProduct  ******* */
 
 describe("modifyProduct", () => {
   test('should modify a product', async () => {
-    const productId = { productId: "1"};
-    mockDocumentClient.promise.mockResolvedValue({productId}) 
+    const productId = { productId: "1" };
+    mockDocumentClient.promise.mockResolvedValue({ productId })
 
     const event = {
       httpMethod: "PATCH",
@@ -333,8 +347,8 @@ describe("modifyProduct", () => {
 
 describe("modifyProduct", () => {
   test('should return error modify a product', async () => {
-    const productId = { productId: "1"};
-    mockDocumentClient.promise.mockRejectedValue( new Error('Error Modified Product')) 
+    const productId = { productId: "1" };
+    mockDocumentClient.promise.mockRejectedValue(new Error('Error Modified Product'))
 
     const event = {
       httpMethod: "PATCH",

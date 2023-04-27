@@ -1,33 +1,41 @@
+/*******Handler*******/
+/* @author: Angel Renteria
+/* @date: 2023-04-26
+/* @description: Handler para la prueba tecnica de FiduOccidente
+/* @version: 1
+*/
+
+/*/******** Importaciones ********/
 const AWS = require('aws-sdk');
 AWS.config.update({ region: 'us-east-1' });
 
-
+/******** Acceso a DynamoDB ********/
 const dynamodb = new AWS.DynamoDB.DocumentClient();
 const tableName = 'products';
 
+
+/******** Funciones / Rutas Api ********/
 const productsAllPath = '/products';
 const productPath = '/product';
 const productPostPath = '/createproduct';
 const productPutPath = '/updateproduct';
 const productDeletePath = '/deleteproduct';
 
-exports.handler = async  function handler (event) {
-
-    console.log('Evento Operation: ', event.operation);
-    console.log('Evento Body: ', event.body);
-    console.log('Evento: ', event);
+exports.handler = async function handler(event) {
 
     let response;
+
+/******** Switch para las diferentes rutas ********/
 
     switch (true) {
         case event.httpMethod === 'GET' && event.path === productsAllPath:
             response = await getProducts();
             break;
-        case event.httpMethod === 'GET' && event.path === productPath:            
+        case event.httpMethod === 'GET' && event.path === productPath:
             response = await getProduct(event.queryStringParameters.productId);
             break;
         case event.httpMethod === 'POST' && event.path === productPostPath || event.operation === 'createProduct':
-            if(event.operation === 'createProduct'){
+            if (event.operation === 'createProduct') {
                 event.body = JSON.stringify(event.body);
             }
             response = await saveProduct(JSON.parse(event.body));
@@ -37,13 +45,13 @@ exports.handler = async  function handler (event) {
             response = await modifyProduct(requestBody.productId, requestBody.updateKey, requestBody.updateValue);
             break;
         case event.httpMethod === 'PUT' && event.path === productPutPath || event.operation === 'updateProduct':
-            if(event.operation === 'updateProduct'){
+            if (event.operation === 'updateProduct') {
                 event.body = JSON.stringify(event.body);
             }
             response = await updateProduct(JSON.parse(event.body));
             break;
         case event.httpMethod === 'DELETE' && event.path === productDeletePath || event.operation === 'deleteProduct':
-            if(event.operation === 'deleteProduct'){
+            if (event.operation === 'deleteProduct') {
                 event.body = JSON.stringify(event.body);
             }
             response = await deleteProduct(JSON.parse(event.body).productId);
@@ -56,21 +64,25 @@ exports.handler = async  function handler (event) {
 
 }
 
+/******** Consulta todos los productos ********/
+
 async function getProducts() {
     const params = {
         TableName: tableName
     }
     const allProducts = await scanDynamoRecords(params, []);
-        const body = {
-            Operation: 'findAllproducts',
-            Message: 'Products Found',
-            Products: allProducts
-        }
-        return buildResponse(200, body);
+    const body = {
+        Operation: 'findAllproducts',
+        Message: 'Products Found',
+        Products: allProducts
+    }
+    return buildResponse(200, body);
 }
 
+/******** Funcion para consultar por productId ********/
+
 async function getProduct(productId) {
-   
+
     const params = {
         TableName: tableName,
         Key: {
@@ -103,6 +115,7 @@ async function getProduct(productId) {
     });
 }
 
+/******** Funcion para guardar un producto ********/
 
 async function saveProduct(requestBody) {
     const params = {
@@ -125,6 +138,8 @@ async function saveProduct(requestBody) {
         return buildResponse(error.statusCode, body);
     });
 }
+
+/******** Funcion para modificar un producto solo un item especifico********/
 
 async function modifyProduct(productId, updateKey, updateValue) {
     const params = {
@@ -155,6 +170,7 @@ async function modifyProduct(productId, updateKey, updateValue) {
     });
 }
 
+/******** Funcion para actualizar un producto completo ********/
 
 async function updateProduct(product) {
     const updateExpressionParts = [];
@@ -193,6 +209,7 @@ async function updateProduct(product) {
     });
 }
 
+/******** Funcion para eliminar un producto ********/
 
 async function deleteProduct(productId) {
     const params = {
@@ -219,8 +236,10 @@ async function deleteProduct(productId) {
     });
 }
 
+/******** Funcion para escanear la tabla ********/
+
 async function scanDynamoRecords(scanParams, itemArray) {
-    try {        
+    try {
         const dynamoData = await dynamodb.scan(scanParams).promise();
         itemArray = itemArray.concat(dynamoData.Items);
         if (dynamoData.LastEvaluatedKey) {
@@ -229,9 +248,11 @@ async function scanDynamoRecords(scanParams, itemArray) {
         }
         return itemArray;
     } catch (error) {
-       return error;
+        return error;
     }
 }
+
+/******** Funcion para construir la respuesta ********/
 
 function buildResponse(statusCode, body) {
     return {
