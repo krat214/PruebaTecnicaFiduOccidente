@@ -61,12 +61,6 @@ Crear Producto
 
 Se realizo Api Gateway ApiProducts
 
-
-
-
-
-![App Screenshot](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
-
 Lambda FuntionsProducts  con unitTes realizado con Jest con coverage de 96.29% sin covertura tres lineas de codigo en total.
 Comprende de :
 - index.js
