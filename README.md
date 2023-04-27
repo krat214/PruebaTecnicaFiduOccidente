@@ -27,10 +27,12 @@ El lenguaje para la lambda pueden ser los siguientes:
 - NodeJS
 - Golang
 - Python
+
 2. Se requiere crear una step function que reutilice la(s) lambda(s)
 - Crear Producto
 - Actualizar Producto
 - Eliminar Producto
+
 Cada ejecución debe permitir recibir un objeto JSON con varios objetos que representaran
 los productos que se quieran crear, modificar o eliminar. El arreglo de objetos se debera iterar
 por medio de un Map.
