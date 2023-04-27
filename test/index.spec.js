@@ -165,7 +165,7 @@ describe("createProduct", () => {
 
     const event = {
       httpMethod: "POST",
-      path: "/product",
+      path: "/createproduct",
       body: JSON.stringify(newProduct)
     };
 
@@ -192,8 +192,60 @@ describe("createProduct", () => {
 
     const event = {
       httpMethod: "POST",
-      path: "/product",
+      path: "/createproduct",
       body: JSON.stringify(newProduct)
+    };
+
+    const result = await handler(event);
+
+    console.log("Results:", result);
+
+    expect(result.statusCode).toBe(undefined);
+    expect(result.body).toBe(JSON.stringify({
+      Operation: 'createProduct',
+      Message: 'Error Saving Product',
+      Error: {}
+    }));
+
+  });
+});
+
+/******Probando CreateProducto desde stepFunction******/
+
+describe("createProduct", () => {
+  test('should creating products from step Functions', async () => {
+    const newProduct = { productId: "4", productName: "product 4" };
+    mockDocumentClient.promise.mockResolvedValue({ newProduct })
+
+    const event = {
+      operation: "createProduct",
+      body: newProduct
+    };
+
+    const result = await handler(event);
+
+    console.log("Results:", result);
+
+    expect(result.statusCode).toBe(200);
+    expect(result.body).toBe(JSON.stringify({
+      Operation: 'createProduct',
+      Message: 'Product Created Successfully',
+      Product: newProduct
+    }));
+
+  });
+});
+
+
+describe("createProduct", () => {
+  test('should return error when creating products from step Functions ', async () => {
+    const newProduct = { productId: "1", productName: "product 1" };
+
+    mockDocumentClient.promise.mockRejectedValue(new Error('Error Saving Product'))
+
+    const event = {
+      operation: "createProduct",
+      body: newProduct
     };
 
     const result = await handler(event);
@@ -220,7 +272,7 @@ describe("updateProduct", () => {
 
     const event = {
       httpMethod: "PUT",
-      path: "/product",
+      path: "/updateproduct",
       body: JSON.stringify(updatedProduct)
     };
 
@@ -245,7 +297,7 @@ describe("updateProduct", () => {
 
     const event = {
       httpMethod: "PUT",
-      path: "/product",
+      path: "/updateproduct",
       body: JSON.stringify(updatedProduct)
     };
 
@@ -264,6 +316,59 @@ describe("updateProduct", () => {
 });
 
 
+/*****Probando Actualizar desde StepFunctions**** */
+
+
+describe("updateProduct", () => {
+  test('should update a product', async () => {
+    const updatedProduct = { productId: "1", productName: "product 1 updated" };
+    mockDocumentClient.promise.mockResolvedValue({ updatedProduct })
+
+    const event = {
+      operation: "updateProduct",
+      body: updatedProduct
+    };
+
+    const result = await handler(event);
+
+    console.log("Results:", result);
+
+    expect(result.statusCode).toBe(200);
+    expect(result.body).toBe(JSON.stringify({
+      Operation: 'updateProduct',
+      Message: 'Product Updated Successfully',
+      Product: updatedProduct
+    }));
+
+  });
+});
+
+describe("updateProduct", () => {
+  test('should return error whenupdate a product', async () => {
+    const updatedProduct = { productId: "1", productName: "product 1 updated" };
+    mockDocumentClient.promise.mockRejectedValue(new Error('Error Updating Product'))
+
+    const event = {
+      operation: "updateProduct",
+      body: updatedProduct
+    };
+
+    const result = await handler(event);
+
+    console.log("Results:", result);
+
+    expect(result.statusCode).toBe(undefined);
+    expect(result.body).toBe(JSON.stringify({
+      Operation: 'updateProduct',
+      Message: 'Error Updating Product',
+      Error: {}
+    }));
+
+  });
+});
+
+
+
 /********* Probando deleteProduct  ******* */
 
 describe("deleteProduct", () => {
@@ -273,7 +378,7 @@ describe("deleteProduct", () => {
 
     const event = {
       httpMethod: "DELETE",
-      path: "/product",
+      path: "/deleteproduct",
       body: JSON.stringify({ productId })
     };
 
@@ -299,8 +404,63 @@ describe("deleteProduct", () => {
 
     const event = {
       httpMethod: "DELETE",
-      path: "/product",
+      path: "/deleteproduct",
       body: JSON.stringify({ productId })
+    };
+
+    const result = await handler(event);
+
+    console.log("Results:", result);
+
+    expect(result.statusCode).toBe(undefined);
+    expect(result.body).toBe(JSON.stringify({
+      Operation: 'deleteProduct',
+      Message: 'Error Deleting Product',
+      Error: {}
+    }));
+
+  });
+});
+
+
+
+
+/****** Probando DeleteProduct desde StepFunctions ****** */
+
+
+describe("deleteProduct", () => {
+  test('should delete a product', async () => {
+    const productId = { productId: "1" };
+    mockDocumentClient.promise.mockResolvedValue({ productId })
+
+    const event = {
+      operation: "deleteProduct",
+      body: productId
+    };
+
+    const result = await handler(event);
+
+    console.log("Results:", result);
+
+    expect(result.statusCode).toBe(200);
+    expect(result.body).toBe(JSON.stringify({
+      Operation: 'deleteProduct',
+      Message: 'Product Deleted Successfully',
+      Product: productId.productId
+    }));
+
+  });
+});
+
+
+describe("deleteProduct", () => {
+  test('should return error delete a product', async () => {
+    const productId = { productId: "1" };
+    mockDocumentClient.promise.mockRejectedValue(new Error('Error Deleting Product'))
+
+    const event = {
+      operation: "deleteProduct",
+      body: productId
     };
 
     const result = await handler(event);
@@ -327,7 +487,7 @@ describe("modifyProduct", () => {
 
     const event = {
       httpMethod: "PATCH",
-      path: "/product",
+      path: "/updateproduct",
       body: JSON.stringify({ productId })
     };
 
@@ -352,7 +512,7 @@ describe("modifyProduct", () => {
 
     const event = {
       httpMethod: "PATCH",
-      path: "/product",
+      path: "/updateproduct",
       body: JSON.stringify({ productId })
     };
 
