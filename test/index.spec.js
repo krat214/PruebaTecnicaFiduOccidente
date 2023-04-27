@@ -320,7 +320,7 @@ describe("updateProduct", () => {
 
 
 describe("updateProduct", () => {
-  test('should update a product', async () => {
+  test('should update a product from step Functions', async () => {
     const updatedProduct = { productId: "1", productName: "product 1 updated" };
     mockDocumentClient.promise.mockResolvedValue({ updatedProduct })
 
@@ -344,7 +344,7 @@ describe("updateProduct", () => {
 });
 
 describe("updateProduct", () => {
-  test('should return error whenupdate a product', async () => {
+  test('should return error whenupdate a product from step Functions', async () => {
     const updatedProduct = { productId: "1", productName: "product 1 updated" };
     mockDocumentClient.promise.mockRejectedValue(new Error('Error Updating Product'))
 
@@ -429,7 +429,7 @@ describe("deleteProduct", () => {
 
 
 describe("deleteProduct", () => {
-  test('should delete a product', async () => {
+  test('should delete a product from step Functions', async () => {
     const productId = { productId: "1" };
     mockDocumentClient.promise.mockResolvedValue({ productId })
 
@@ -454,7 +454,7 @@ describe("deleteProduct", () => {
 
 
 describe("deleteProduct", () => {
-  test('should return error delete a product', async () => {
+  test('should return error delete a product from step Functions', async () => {
     const productId = { productId: "1" };
     mockDocumentClient.promise.mockRejectedValue(new Error('Error Deleting Product'))
 
