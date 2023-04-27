@@ -7,7 +7,7 @@
         "test": "jest",
         "coverage": "jest --coverage"
     },
-    "author": "",
+    "author": "Angel Renteria",
     "license": "MIT",
     "devDependencies": {
         "jest": "^29.5.0",
