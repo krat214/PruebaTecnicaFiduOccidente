@@ -62,9 +62,13 @@ Crear Producto
 Se realizo Api Gateway ApiProducts
 Rutas: 
 Devolver Todos los  productos : https://3cukkm8fv6.execute-api.us-east-1.amazonaws.com/api/products
+
 Crear producto: https://3cukkm8fv6.execute-api.us-east-1.amazonaws.com/api/createproduct
+
 Actualizar producto: https://3cukkm8fv6.execute-api.us-east-1.amazonaws.com/api/updateproduct
+
 Borrar producto: https://3cukkm8fv6.execute-api.us-east-1.amazonaws.com/api/deleteproduct
+
 
 Lambda FuntionsProducts  con unitTes realizado con Jest con coverage de 96.29% sin covertura tres lineas de codigo en total.
 Comprende de :
